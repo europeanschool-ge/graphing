@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Polynomial Graphing</title>
+<style>
+input {text-align:right;}
+</style>
+</head>
+
+<body onload="graph(ctx)">
+
+<canvas id="myCanvas" width="500" height="500" 
+style="border:1px solid #d3d3d3; float:left; margin-right:10px;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+var i;
+
+function redraw()
+{
+
+c.width=c.width;
+// ctx.clearRect(0, 0, 500, 500);
+
+ ctx.moveTo(0,250);
+ ctx.lineTo(500,250);
+ ctx.stroke;
+
+ ctx.moveTo(250,0);
+ ctx.lineTo(250,500);
+ ctx.stroke;
+}
+
+
+//zoom = #pixels per unit
+var zoom;
+
+
+
+function f(x, co)
+{
+var total=0;
+var degree=1;
+ for (i in co)
+ {
+  total+=degree*parseFloat(co[i]);
+  degree*=x;
+ }
+
+
+ return (total)
+}
+
+function graph(ctx)
+{
+redraw();
+
+var zm = document.getElementById("zoomslider");
+zoom = zm.elements[0].value;
+
+//co currently holds the coefficients in descending order of degree
+var co = [0, 0, 0, 0, 1, 0]
+
+var cF = document.getElementById("coefficients");
+for (var i=0; i<cF.length; i++)
+{
+if (cF.elements[i].value)
+ co[i] = cF.elements[i].value;
+else
+ co[i] = 0;
+}
+
+co.reverse();
+
+var x=(-250/zoom);
+ctx.moveTo(250+zoom*x,250-zoom*f(x, co));
+
+for (x;x<(251/zoom);x=x+1/zoom)
+{
+ctx.lineTo(250+zoom*x,250-zoom*f(x, co));
+ctx.stroke();
+}
+}
+
+
+graph(ctx);
+
+
+
+
+</script>
+
+<div style="font-size:1em;">
+<p>Coefficients:</p>
+<form id="coefficients">
+<input type="number" size="3" name="5" value="0" onkeyup="graph(ctx)">x<sup>5</sup>
++ <input type="number" size="3" name="4" value="0" onkeyup="graph(ctx)">x<sup>4</sup>
++ <input type="number" size="3" name="3" value="0" onkeyup="graph(ctx)">x<sup>3</sup>
++ <input type="number" size="3" name="2" value="1" onkeyup="graph(ctx)">x<sup>2</sup>
++ <input type="number" size="3" name="1" value="0" onkeyup="graph(ctx)">x
++ <input type="number" size="3" name="0" value="-4" onkeyup="graph(ctx)">
+
+</form>
+<p>Zoom:</p>
+<form id="zoomslider" oninput="result.value=zoom.value">
+-<input type="range" style="width: 25%;" name="zoom" min="1" max="200" value="50" onmouseup="graph(ctx)">+
+<p>1 unit = <output name="result">50</output>px</p>
+</form>
+
+</div>
+
+</body>
+</html>
